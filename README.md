@@ -109,6 +109,12 @@ Notes from testing against this mat (firmware v1.0):
 
 - The brightness read command (`0x84`) is rejected, so the current brightness
   cannot be queried. `strider brightness` prints the last value it set.
+- Brightness scales each colour channel as `value x brightness / 256`, where
+  brightness is on the 0 to 255 scale, and the fraction is discarded. A
+  channel that comes out below 1 is dark. At 30% brightness that is any value
+  under 4, at 10% any value under 10, and even at 100% a value of 1. So at low
+  brightness a colour loses a small component in one channel, and its hue
+  shifts. Found by eye at 10%, 30% and 100%.
 - The control interface is the mouse-type HID interface. The mat's other two
   interfaces are keyboard-type, and macOS will not let a process open those
   without Input Monitoring permission. `strider` never opens them.
