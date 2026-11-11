@@ -87,8 +87,8 @@ final class EffectPacketTests: XCTestCase {
 
     func testSpectrumAndWave() {
         XCTAssertEqual(wire(Strider.reports(for: .spectrum)[0]), "003f000000060f02 010003000000")
-        XCTAssertEqual(wire(Strider.reports(for: .wave(.anticlockwise))[0]), "003f000000060f02 010004012800")
-        XCTAssertEqual(wire(Strider.reports(for: .wave(.clockwise))[0]), "003f000000060f02 010004022800")
+        XCTAssertEqual(wire(Strider.reports(for: .wave(.anticlockwise, delay: 0x28))[0]), "003f000000060f02 010004022800")
+        XCTAssertEqual(wire(Strider.reports(for: .wave(.clockwise, delay: 0xC8))[0]), "003f000000060f02 01000401c800")
     }
 
     func testTemporaryStorageClearsTheStoreByte() {
@@ -181,8 +181,9 @@ final class InvocationTests: XCTestCase {
         XCTAssertEqual(try parse("ff8800"), .light(effect: .solid(RGB(255, 136, 0)), brightness: nil, temporary: false))
         XCTAssertEqual(try parse("off"), .light(effect: .off, brightness: nil, temporary: false))
         XCTAssertEqual(try parse("spectrum"), .light(effect: .spectrum, brightness: nil, temporary: false))
-        XCTAssertEqual(try parse("wave"), .light(effect: .wave(.clockwise), brightness: nil, temporary: false))
-        XCTAssertEqual(try parse("wave ccw"), .light(effect: .wave(.anticlockwise), brightness: nil, temporary: false))
+        XCTAssertEqual(try parse("wave"), .light(effect: .wave(.clockwise, delay: 0x28), brightness: nil, temporary: false))
+        XCTAssertEqual(try parse("wave --delay 200"), .light(effect: .wave(.clockwise, delay: 200), brightness: nil, temporary: false))
+        XCTAssertEqual(try parse("wave ccw"), .light(effect: .wave(.anticlockwise, delay: 0x28), brightness: nil, temporary: false))
         XCTAssertEqual(try parse("breathe"), .light(effect: .breathe([]), brightness: nil, temporary: false))
         XCTAssertEqual(
             try parse("breathe red blue"),
@@ -226,7 +227,7 @@ final class InvocationTests: XCTestCase {
         let invalid = [
             "static", "static red blue", "static nope", "nope", "off red", "breathe red green blue",
             "wave sideways", "leds", "brightness 101", "brightness -1", "brightness abc", "brightness 10 -b 20",
-            "-b", "--bogus", "info -b 10", "watch --temporary", "agent", "agent restart", "apply now",
+            "-b", "--bogus", "red --delay 50", "--delay 50", "wave --delay 0", "wave --delay 256", "wave --delay", "info -b 10", "watch --temporary", "agent", "agent restart", "apply now",
             "leds " + [String](repeating: "red", count: 20).joined(separator: " "),
         ]
         for line in invalid {
@@ -260,7 +261,7 @@ final class SavedStateTests: XCTestCase {
     func testSurvivesEncoding() throws {
         let effects: [Strider.Effect] = [
             .off, .solid(RGB(1, 2, 3)), .breathe([]), .breathe([RGB(1, 2, 3), RGB(4, 5, 6)]), .spectrum,
-            .wave(.anticlockwise), .leds(RGB.spread([RGB(255, 0, 0), RGB(0, 0, 255)], across: Strider.ledCount)),
+            .wave(.anticlockwise, delay: 200), .leds(RGB.spread([RGB(255, 0, 0), RGB(0, 0, 255)], across: Strider.ledCount)),
         ]
         for effect in effects {
             let state = SavedState(effect: effect, brightness: 77)

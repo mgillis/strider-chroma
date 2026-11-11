@@ -24,6 +24,9 @@ public enum Strider {
     static let commandFrame: UInt8 = 0x03
     static let commandBrightness: UInt8 = 0x04
 
+    /// The wave delay that OpenRazer always sends, and the factory pace.
+    public static let defaultWaveDelay: UInt8 = 0x28
+
     /// The mat has a single lighting zone, addressed as LED 0.
     static let led: UInt8 = 0x00
 
@@ -35,9 +38,11 @@ public enum Strider {
         case saved = 0x01
     }
 
+    /// As seen from above. Checked by eye on the Strider. OpenRazer's driver
+    /// comment assigns the two values the other way round.
     public enum WaveDirection: UInt8, Codable {
-        case anticlockwise = 0x01
-        case clockwise = 0x02
+        case clockwise = 0x01
+        case anticlockwise = 0x02
     }
 
     public enum Effect: Equatable, Codable {
@@ -48,7 +53,9 @@ public enum Strider {
         /// Slowly cycles the whole border through the colour wheel.
         case spectrum
         /// A rainbow that travels around the border. This is the factory default.
-        case wave(WaveDirection)
+        /// `delay` sets the pace: a higher value is slower. The rainbow moves in
+        /// discrete steps without fading, which becomes visible at high values.
+        case wave(WaveDirection, delay: UInt8)
         /// One colour per LED, exactly `ledCount` of them. The mat does not
         /// store this itself, so it is lost when the mat loses power.
         case leds([RGB])
@@ -82,10 +89,10 @@ public enum Strider {
             for color in colors { args += [color.r, color.g, color.b] }
         case .spectrum:
             args[2] = 0x03
-        case .wave(let direction):
+        case .wave(let direction, let delay):
             args[2] = 0x04
             args[3] = direction.rawValue
-            args[4] = 0x28
+            args[4] = delay
         case .leds:
             fatalError("handled above")
         }

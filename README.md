@@ -26,6 +26,17 @@ monitor and nearly magenta on the mat.
 
 The mat fades from one colour to the next over a few seconds by itself.
 
+## Wave
+
+`strider wave` is the factory rainbow, and `strider wave ccw` runs it the
+other way. `--delay` sets its pace from 1 to 255, where higher is slower and
+40 is the factory pace:
+
+    strider wave --delay 255
+
+The wave does not fade. It moves in discrete steps, which become visible at
+high delays.
+
 For `strider leds`, the first LED is at the power pack on the left edge. The
 row runs anticlockwise seen from above: toward you, right along the front
 edge, away along the right edge and back along the far edge. The last LED is

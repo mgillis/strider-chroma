@@ -46,6 +46,7 @@ public enum Invocation: Equatable {
 
         Options:
           -b, --brightness <0-100>           set the brightness along with an effect
+          --delay <1-255>                    pace of "wave": higher is slower, \(Strider.defaultWaveDelay) is the factory pace
           --temporary                        do not store the change in the mat or in the saved setting
 
         A colour is a name (see "strider colors"), hex such as ff8800 or #f80, or decimal r,g,b.
@@ -54,6 +55,7 @@ public enum Invocation: Equatable {
     public static func parse(_ arguments: [String]) throws -> Invocation {
         var positional: [String] = []
         var brightness: UInt8?
+        var waveDelay: UInt8?
         var temporary = false
 
         var index = 0
@@ -69,6 +71,12 @@ public enum Invocation: Equatable {
                 guard index < arguments.count else { throw UsageError("\(argument) needs a value from 0 to 100") }
                 brightness = try parsePercent(arguments[index])
                 index += 1
+            case "--delay":
+                guard index < arguments.count, let delay = UInt8(arguments[index]), delay > 0 else {
+                    throw UsageError("--delay needs a value from 1 to 255")
+                }
+                waveDelay = delay
+                index += 1
             case _ where argument.hasPrefix("--brightness="):
                 brightness = try parsePercent(String(argument.dropFirst("--brightness=".count)))
             case _ where argument.hasPrefix("-") && argument.count > 1:
@@ -78,6 +86,9 @@ public enum Invocation: Equatable {
             }
         }
 
+        guard waveDelay == nil || positional.first?.lowercased() == "wave" else {
+            throw UsageError("--delay only applies to \"wave\"")
+        }
         guard let command = positional.first?.lowercased() else {
             // "strider -b 40" on its own is a brightness change.
             return brightness == nil ? .help : .light(effect: nil, brightness: brightness, temporary: temporary)
@@ -114,7 +125,7 @@ public enum Invocation: Equatable {
             return light(.spectrum)
         case "wave":
             guard rest.count <= 1 else { throw UsageError("\"wave\" takes at most a direction: cw or ccw") }
-            return light(.wave(try parseDirection(rest.first ?? "cw")))
+            return light(.wave(try parseDirection(rest.first ?? "cw"), delay: waveDelay ?? Strider.defaultWaveDelay))
         case "leds", "gradient":
             guard !rest.isEmpty else { throw UsageError("\"\(command)\" needs at least one colour") }
             guard rest.count <= Strider.ledCount else {

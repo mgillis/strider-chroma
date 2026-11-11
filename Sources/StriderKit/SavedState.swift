@@ -53,8 +53,9 @@ extension Strider.Effect: CustomStringConvertible {
             return colors.isEmpty ? "breathe (random colours)" : "breathe " + colors.map(\.hex).joined(separator: " ")
         case .spectrum:
             return "spectrum"
-        case .wave(let direction):
+        case .wave(let direction, let delay):
             return "wave \(direction == .clockwise ? "clockwise" : "anticlockwise")"
+                + (delay == Strider.defaultWaveDelay ? "" : ", delay \(delay)")
         case .leds(let colors):
             guard let first = colors.first, let last = colors.last else { return "leds" }
             return colors.allSatisfy { $0 == first } ? "leds \(first.hex)" : "leds \(first.hex) to \(last.hex)"
