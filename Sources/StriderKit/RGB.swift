@@ -45,7 +45,7 @@ public struct RGB: Equatable, Codable {
         ("sky", RGB(0, 255, 255), "light blue"),
         ("teal", RGB(0, 200, 140), "teal"),
         ("green", RGB(0, 255, 0), "pure green"),
-        ("lemon", RGB(255, 200, 0), "lemon yellow, slightly green"),
+        ("banana", RGB(255, 200, 0), "banana yellow, slightly green"),
         ("yellow", RGB(255, 170, 0), "yellow"),
         ("black", RGB(0, 0, 0), "unlit"),
     ]
