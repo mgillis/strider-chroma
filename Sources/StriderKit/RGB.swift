@@ -34,7 +34,6 @@ public struct RGB: Equatable, Codable {
         ("soft", RGB(255, 180, 100), "cream, an off-white"),
         ("warm", RGB(255, 140, 40), "warm bulb white, slightly orange"),
         ("amber", RGB(255, 104, 0), "amber, like an amber terminal"),
-        ("ember", RGB(255, 90, 10), "the orange of a glowing ember"),
         ("orange", RGB(255, 50, 0), "hazard orange"),
         ("red", RGB(255, 0, 0), "tomato red"),
         ("pink", RGB(255, 40, 120), "soft rose pink"),
