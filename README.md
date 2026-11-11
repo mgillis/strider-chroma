@@ -24,7 +24,9 @@ screen, and a little of a second channel shifts the hue a long way. `ffb464`
 is a peachy orange on a monitor and cream on the mat. `8c00ff` is purple on a
 monitor and nearly magenta on the mat.
 
-The mat fades from one colour to the next over a few seconds by itself.
+When a static colour changes, the mat fades from the old one to the new one
+over a few seconds by itself. Per-LED patterns switch instantly, so
+`strider leds <colour>` is the way to compare two colours back to back.
 
 ## Wave
 
