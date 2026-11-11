@@ -7,8 +7,8 @@ func run(_ invocation: Invocation) throws {
         print(Invocation.usage)
 
     case .colors:
-        for (name, color) in RGB.named.sorted(by: { $0.key < $1.key }) {
-            print("\(name.padding(toLength: 10, withPad: " ", startingAt: 0)) \(color.hex)")
+        for entry in RGB.palette {
+            print("\(entry.name.padding(toLength: 9, withPad: " ", startingAt: 0)) \(entry.color.hex)  \(entry.looksLike)")
         }
 
     case .light(let effect, let brightness, let temporary):

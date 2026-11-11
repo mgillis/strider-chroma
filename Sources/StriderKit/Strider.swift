@@ -7,7 +7,11 @@
 public enum Strider {
     public static let vendorID = 0x1532
     public static let productID = 0x0C05
-    /// The lit border is one row of 19 individually addressable LEDs.
+    /// The lit border is one row of 19 individually addressable LEDs. The
+    /// first is at the power pack on the left edge. From there the row runs
+    /// anticlockwise seen from above: toward the user, right along the front
+    /// edge, away along the right edge, and back along the far edge. The
+    /// last LED is therefore next to the first.
     public static let ledCount = 19
 
     /// Transaction id for lighting commands and the firmware version query.

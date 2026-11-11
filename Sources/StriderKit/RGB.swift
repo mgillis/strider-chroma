@@ -19,30 +19,39 @@ public struct RGB: Equatable, Codable {
         return "#" + pair(r) + pair(g) + pair(b)
     }
 
-    /// Named colours accepted on the command line.
+    /// The named colours accepted on the command line, in hue order, each
+    /// with a description of how it looks on the mat.
     ///
-    /// The "warm" and "soft" entries are tuned for LEDs: an RGB LED showing a
-    /// monitor-style warm white (for example #ffd8b0) looks close to plain
-    /// white, so these have far less blue than their sRGB namesakes would.
-    public static let named: [String: RGB] = [
-        "white": RGB(255, 255, 255),
-        "warm": RGB(255, 140, 40),
-        "candle": RGB(255, 90, 10),
-        "soft": RGB(255, 180, 100),
-        "red": RGB(255, 0, 0),
-        "orange": RGB(255, 80, 0),
-        "amber": RGB(255, 120, 0),
-        "yellow": RGB(255, 200, 0),
-        "green": RGB(0, 255, 0),
-        "teal": RGB(0, 200, 140),
-        "cyan": RGB(0, 255, 255),
-        "blue": RGB(0, 0, 255),
-        "indigo": RGB(60, 0, 255),
-        "purple": RGB(140, 0, 255),
-        "magenta": RGB(255, 0, 255),
-        "pink": RGB(255, 40, 120),
-        "black": RGB(0, 0, 0),
+    /// The values were chosen by eye on a Strider Chroma at 30% brightness,
+    /// and they differ a lot from the sRGB colours of the same names. Mixed
+    /// colours look far less saturated on the mat than on a screen, and a
+    /// small amount of a second channel moves the hue a long way: #ff3200 is
+    /// already a full orange, and #8c00ff is nearly magenta. A name is only
+    /// listed if its colour can be recognised without a neighbour to compare
+    /// it with.
+    public static let palette: [(name: String, color: RGB, looksLike: String)] = [
+        ("white", RGB(255, 255, 255), "neutral white"),
+        ("soft", RGB(255, 180, 100), "cream, an off-white"),
+        ("warm", RGB(255, 140, 40), "warm bulb white, slightly orange"),
+        ("amber", RGB(255, 120, 0), "amber, like an amber terminal"),
+        ("ember", RGB(255, 90, 10), "the orange of a glowing ember"),
+        ("orange", RGB(255, 50, 0), "hazard orange"),
+        ("red", RGB(255, 0, 0), "tomato red"),
+        ("pink", RGB(255, 40, 120), "soft rose pink"),
+        ("magenta", RGB(255, 0, 255), "vivid magenta"),
+        ("purple", RGB(96, 0, 255), "purple"),
+        ("violet", RGB(60, 0, 255), "flower-petal violet"),
+        ("blue", RGB(0, 0, 255), "blue with a faint trace of purple"),
+        ("sky", RGB(0, 255, 255), "light blue"),
+        ("teal", RGB(0, 200, 140), "teal"),
+        ("green", RGB(0, 255, 0), "pure green"),
+        ("lemon", RGB(255, 200, 0), "lemon yellow, slightly green"),
+        ("yellow", RGB(255, 170, 0), "yellow"),
+        ("black", RGB(0, 0, 0), "unlit"),
     ]
+
+    public static let named: [String: RGB] = Dictionary(
+        uniqueKeysWithValues: palette.map { ($0.name, $0.color) })
 
     /// Parses `#rrggbb`, `rrggbb`, `#rgb`, `rgb`, `r,g,b` (decimal) or a name from `named`.
     public init?(parsing text: String) {

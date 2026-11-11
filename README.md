@@ -15,6 +15,23 @@ tool that sets the colour, effect and brightness.
 
 Run `strider help` for everything else.
 
+## Colours
+
+`strider colors` lists the named colours with a description of how each one
+looks on the mat. The names were calibrated by eye, because hex values are a
+poor guide here: mixed colours look much less saturated on the mat than on a
+screen, and a little of a second channel shifts the hue a long way. `ffb464`
+is a peachy orange on a monitor and cream on the mat. `8c00ff` is purple on a
+monitor and nearly magenta on the mat.
+
+The mat fades from one colour to the next over a few seconds by itself.
+
+For `strider leds`, the first LED is at the power pack on the left edge. The
+row runs anticlockwise seen from above: toward you, right along the front
+edge, away along the right edge and back along the far edge. The last LED is
+next to the first, and neighbouring LEDs blend in the diffuser, so the two
+ends of a gradient mix where they meet at the power pack.
+
 ## Install
 
 Needs Xcode or the Xcode command line tools (Swift 5.9 or later). No other dependencies.

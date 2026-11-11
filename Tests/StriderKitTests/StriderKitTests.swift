@@ -156,6 +156,19 @@ final class RGBTests: XCTestCase {
     func testHex() {
         XCTAssertEqual(RGB(1, 0xAB, 0).hex, "#01ab00")
     }
+
+    func testEveryNamedColourIsDistinctAndParses() {
+        XCTAssertEqual(Set(RGB.palette.map(\.name)).count, RGB.palette.count, "a name is listed twice")
+        XCTAssertEqual(Set(RGB.palette.map(\.color.hex)).count, RGB.palette.count, "two names share a value")
+        for entry in RGB.palette {
+            XCTAssertEqual(RGB(parsing: entry.name), entry.color)
+            XCTAssertEqual(entry.name, entry.name.lowercased(), "names are matched in lower case")
+            // A name made only of hex digits would be ambiguous with a hex colour.
+            XCTAssertFalse(
+                [3, 6].contains(entry.name.count) && entry.name.allSatisfy(\.isHexDigit),
+                "\"\(entry.name)\" could also be read as hex")
+        }
+    }
 }
 
 final class InvocationTests: XCTestCase {

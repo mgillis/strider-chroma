@@ -37,7 +37,7 @@ public enum Invocation: Equatable {
           strider brightness [0-100]         set the brightness, or print the last one set
 
           strider info                       firmware, serial number and the current setting
-          strider colors                     list the colour names
+          strider colors                     list the colour names and how each looks on the mat
           strider apply                      send the current setting to the mat again
           strider watch                      stay running and re-apply the setting whenever the mat
                                              is attached or the Mac wakes
